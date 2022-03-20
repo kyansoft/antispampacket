@@ -1,0 +1,23 @@
+case ENET_EVENT_TYPE_RECEIVE:
+			{
+				ENetPeer* peer = event.peer;
+				char clientConnection[16];
+				enet_address_get_host_ip(&peer->address, clientConnection, 16);
+				if (peer->data == NULL) continue;
+				PlayerInfo* pData = GetPeerData(peer);
+				if (peer->incomingDataTotal >= 7000) {
+					Player::OnConsoleMessage(peer, "Your sending to many packets, Disconnecting...");
+					enet_peer_disconnect_later(peer, 0);
+				}
+				int messageType = GetMessageTypeFromPacket(event.packet);
+				WorldInfo* world = worldDB.get_pointer(pData->currentWorld);
+				if (world == NULL) continue;
+				switch (messageType) {
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Additional Code
+Put this code in struct playerinfo (player.h for gtos users)
+
+int pps = 0;
+long long int lpps = 0;
